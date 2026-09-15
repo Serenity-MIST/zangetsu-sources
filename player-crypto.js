@@ -18,3 +18,19 @@ function decodePlayerSources(encoded) {
   return JSON.parse(decodeURIComponent(out.map(function(x){return '%'+('0'+x.toString(16)).slice(-2);}).join('')));
 }
 function sourceFiles(data){var v=data.sources;if(!v&&data.enc)v=decodePlayerSources(data.enc);if(!Array.isArray(v))v=[v];return v.map(function(x){return typeof x==='string'?x:x&&x.file;}).filter(function(x){return typeof x==='string'&&/^https?:\/\//i.test(x);});}
+// SHA-256 operates on bytes, including HMAC's non-UTF8 pads.
+function sha256Bytes(input){
+ var primes=[],constants=[],initial=[];for(var n=2;primes.length<64;n++){if(primes.every(function(p){return n%p!==0;})){primes.push(n);constants.push((Math.pow(n,1/3)*4294967296)|0);if(initial.length<8)initial.push((Math.sqrt(n)*4294967296)|0);}}
+ var bytes=input.slice(),length=bytes.length*8;bytes.push(128);while(bytes.length%64!==56)bytes.push(0);for(var i=7;i>=0;i--)bytes.push(i>=4?0:(length>>>(i*8))&255);
+ function rotate(x,n){return(x>>>n)|(x<<(32-n));}var h=initial;
+ for(var offset=0;offset<bytes.length;offset+=64){var w=[];for(i=0;i<16;i++)w[i]=(bytes[offset+4*i]<<24)|(bytes[offset+4*i+1]<<16)|(bytes[offset+4*i+2]<<8)|bytes[offset+4*i+3];for(i=16;i<64;i++){var x=w[i-15],y=w[i-2];w[i]=(w[i-16]+(rotate(x,7)^rotate(x,18)^(x>>>3))+w[i-7]+(rotate(y,17)^rotate(y,19)^(y>>>10)))|0;}var a=h.slice();for(i=0;i<64;i++){var t1=(a[7]+(rotate(a[4],6)^rotate(a[4],11)^rotate(a[4],25))+((a[4]&a[5])^(~a[4]&a[6]))+constants[i]+w[i])|0;var t2=((rotate(a[0],2)^rotate(a[0],13)^rotate(a[0],22))+((a[0]&a[1])^(a[0]&a[2])^(a[1]&a[2])))|0;a=[(t1+t2)|0,a[0],a[1],a[2],(a[3]+t1)|0,a[4],a[5],a[6]];}h=h.map(function(v,j){return(v+a[j])|0;});}
+ var out=[];h.forEach(function(v){for(var j=3;j>=0;j--)out.push((v>>>(j*8))&255);});return out;
+}
+function signPlayerUrl(url,now){
+ if(/[?&]token=/.test(url))return url;var match=url.match(/\/([a-f0-9]{32})\/([a-f0-9]{32})\//i);if(!match)return url;
+ var message=String(Math.floor((now==null?Date.now():now)/1000)+90)+'|'+match[1].toLowerCase()+'/'+match[2].toLowerCase();
+ var key=utf8('MpCdnT0k3n!9f2K#xQ7vL5mR8wN1pY4s');while(key.length<64)key.push(0);
+ var inner=key.map(function(b){return b^54;}),outer=key.map(function(b){return b^92;});var signature=sha256Bytes(outer.concat(sha256Bytes(inner.concat(utf8(message)))));
+ return url+(url.indexOf('?')<0?'?':'&')+'token='+b64(utf8(message)).replace(/=+$/,'')+'.'+b64(signature).replace(/=+$/,'');
+}
+

@@ -1,7 +1,7 @@
 'use strict';
 const fs=require('node:fs');const path=require('node:path');
 const root=__dirname;
-const version='0.1.1';
+const version='0.1.2';
 const definitions=[
  {id:'serenity-anikoto',name:'Anikoto',site:'https://anikototv.to',type:'anime'},
  {id:'serenity-animekai',name:'AnimeKai (Unoriginal)',site:'https://animekaitv.to',type:'anime'},
@@ -18,4 +18,5 @@ const sources=definitions.map(d=>{
 });
 fs.writeFileSync(path.join(root,'index.json'),JSON.stringify({name:'Serenity Zangetsu Sources',description:'Experimental native JavaScript ports. Direct anime streams and Manganato reading. See README for proxy-host limitations and testing status.',sources},null,2)+'\n');
 console.log('Built '+sources.length+' standalone providers and index.json');
+
 

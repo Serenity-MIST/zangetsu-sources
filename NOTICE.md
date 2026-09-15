@@ -11,3 +11,5 @@ Both upstreams license this code under Apache License 2.0. See LICENSE.
 Changes: translated Kotlin logic into standalone JavaScript for Zangetsu; replaced Jsoup with a small HTML tree parser; replaced Android networking and model objects with Zangetsu's fetch and JSON contracts; bundled shared logic per provider; bounded requests; omitted Android-only binary segment proxies, supplementary mapper sources, image merging, tracker integration and source-specific preference screens. Preserved explicit errors when a direct stream cannot be produced.
 
 Zangetsu's public provider contract and JSON models were consulted for interoperability. No Zangetsu application code is bundled. Zangetsu is separately licensed under GPL-3.0.
+
+The MegaPlay response decoding and URL-signing compatibility code follows the public web player's protocol observed at https://megaplay.buzz/lib/newclient.min.js and https://megaplay.buzz/lib/e1-player.min.js. The provider contains locally implemented cryptographic routines and does not download or execute those scripts at runtime.
