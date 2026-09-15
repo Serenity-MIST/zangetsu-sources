@@ -1,0 +1,46 @@
+{
+  "name": "Serenity Zangetsu Sources",
+  "description": "Experimental native JavaScript ports. Direct anime streams and Manganato reading. See README for proxy-host limitations and testing status.",
+  "sources": [
+    {
+      "id": "serenity-anikoto",
+      "name": "Anikoto",
+      "version": "0.1.0",
+      "type": "anime",
+      "lang": "en",
+      "file": "serenity-anikoto.js",
+      "logo": "https://anikototv.to/favicon.ico",
+      "nsfw": false
+    },
+    {
+      "id": "serenity-animekai",
+      "name": "AnimeKai (Unoriginal)",
+      "version": "0.1.0",
+      "type": "anime",
+      "lang": "en",
+      "file": "serenity-animekai.js",
+      "logo": "https://animekaitv.to/favicon.ico",
+      "nsfw": false
+    },
+    {
+      "id": "serenity-aniwave",
+      "name": "AniWave (Unoriginal)",
+      "version": "0.1.0",
+      "type": "anime",
+      "lang": "en",
+      "file": "serenity-aniwave.js",
+      "logo": "https://animewave.to/favicon.ico",
+      "nsfw": false
+    },
+    {
+      "id": "serenity-manganato",
+      "name": "Manganato",
+      "version": "0.1.0",
+      "type": "manga",
+      "lang": "en",
+      "file": "serenity-manganato.js",
+      "logo": "https://www.natomanga.com/favicon.ico",
+      "nsfw": true
+    }
+  ]
+}
