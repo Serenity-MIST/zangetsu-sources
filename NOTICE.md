@@ -19,3 +19,9 @@ The MegaPlay response decoding and URL-signing compatibility code follows the pu
 The modified `cine-core.js` and generated `serenity-cinestream.js` are distributed under **GPL-3.0-or-later**; see LICENSE-GPL-3.0. Shared Apache-2.0 helpers retain their license and notices within this combined provider. The three anime source bundles and their helpers remain Apache-2.0 (LICENSE).
 
 Changes made 15 September 2026: translated Cinemeta catalog/search/detail/episodes and VaPlayer extraction into native JavaScript; preserved playback Referer and captions; added season-prefixed episode titles, settings, validation and bounded requests. This port includes movies and series using VaPlayer, not the entire upstream provider registry, anime mappings, torrent/debrid integrations or Android plugin UI. All corresponding editable source and build files are included in this repository.
+
+## 0.2.4 backup providers
+
+AnimeGG parsing and extraction are adapted from Yuzono AnimeGG.kt. Videasy's session/seed request and response protocol are adapted from Yuzono CinebyExtractor.kt and CinebyDto.kt, inspected at commit bcc555edec1d9e7cf416f681e1049f56a882c9d9. Upstream: https://github.com/yuzono/anime-extensions (Apache-2.0; Copyright 2015 Javier Tomás and contributors).
+
+Changes: native JavaScript ports, English alias matching, ascending episodes, isolated settings, fresh session handling and a playback-header correction. Only the tested Yoru/CDN backend is included. AnimeGG remains Apache-2.0. The Videasy bundle combines Apache-2.0-derived extraction with the GPL-3.0-or-later CSX catalog helpers and is distributed under GPL-3.0-or-later. All editable sources and build files are supplied.
