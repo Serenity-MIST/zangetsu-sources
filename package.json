@@ -1,6 +1,6 @@
 {
   "name": "serenity-zangetsu-sources",
-  "version": "0.2.3",
+  "version": "0.2.2",
   "private": true,
   "description": "Native JavaScript provider ports for Zangetsu",
   "license": "Apache-2.0 AND GPL-3.0-or-later",

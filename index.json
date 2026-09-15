@@ -5,7 +5,7 @@
     {
       "id": "serenity-anikoto",
       "name": "Anikoto",
-      "version": "0.2.3",
+      "version": "0.2.2",
       "type": "anime",
       "lang": "en",
       "file": "serenity-anikoto.js",
@@ -15,7 +15,7 @@
     {
       "id": "serenity-animekai",
       "name": "AnimeKai (Unoriginal)",
-      "version": "0.2.3",
+      "version": "0.2.2",
       "type": "anime",
       "lang": "en",
       "file": "serenity-animekai.js",
@@ -25,7 +25,7 @@
     {
       "id": "serenity-aniwave",
       "name": "AniWave (Unoriginal)",
-      "version": "0.2.3",
+      "version": "0.2.2",
       "type": "anime",
       "lang": "en",
       "file": "serenity-aniwave.js",
@@ -35,7 +35,7 @@
     {
       "id": "serenity-cinestream",
       "name": "CineStream",
-      "version": "0.2.3",
+      "version": "0.2.2",
       "type": "movie",
       "lang": "en",
       "file": "serenity-cinestream.js",

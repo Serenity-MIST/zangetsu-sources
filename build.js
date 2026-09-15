@@ -1,7 +1,7 @@
 'use strict';
 const fs=require('node:fs');const path=require('node:path');
 const root=__dirname;
-const version='0.2.3';
+const version='0.2.2';
 const definitions=[
  {id:'serenity-anikoto',name:'Anikoto',site:'https://anikototv.to',type:'anime'},
  {id:'serenity-animekai',name:'AnimeKai (Unoriginal)',site:'https://animekaitv.to',type:'anime'},

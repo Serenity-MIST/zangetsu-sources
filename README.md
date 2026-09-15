@@ -1,6 +1,6 @@
 # Serenity Zangetsu Sources
 
-Native video sources for Zangetsu. Current release: **0.2.3**.
+Native video sources for Zangetsu. Current release: **0.2.2**.
 
 ## Install or update
 
@@ -8,7 +8,7 @@ Native video sources for Zangetsu. Current release: **0.2.3**.
 https://raw.githubusercontent.com/Serenity-MIST/zangetsu-sources/main/index.json
 ```
 
-Refresh the repository and update the installed sources to 0.2.3. Open the settings icon beside a source to change its preferences.
+Refresh the repository and update the installed sources to 0.2.2. Open the settings icon beside a source to change its preferences.
 
 ## Sources
 
@@ -17,7 +17,7 @@ Refresh the repository and update the installed sources to 0.2.3. Open the setti
 
 Manganato and manga support have been removed from this repository at the owner's request. An already-installed manga source must be uninstalled in the app; removing it from a manifest cannot uninstall it remotely.
 
-## 0.2.3 fixes
+## 0.2.2 fixes
 
 ### The Mentalist and same-named movies/series
 
@@ -29,7 +29,7 @@ If Zangetsu previously cached the wrong title, reopen its **Wrong title?** picke
 
 ### Audio language
 
-Streams now supply Zangetsu's `audioLang` field when known. HLS audio-track language tags are normalized to codes such as `en`, `ja` and `zh`. Anime sub servers default to Japanese and dub servers to English, as configured for these sources. Explicit HLS audio metadata and the manual override take precedence. Subtitle languages are normalized separately.
+Streams now supply Zangetsu's `audioLang` field when known. HLS audio-track language tags are normalized to codes such as `en`, `ja` and `zh`. English-dub anime servers have an English fallback; subbed audio is not assumed to be Japanese. Subtitle languages are normalized separately.
 
 If a playlist declares several audio languages, the stream label lists them and the player can choose its audio track. If the upstream stream omits language metadata, it remains **Audio: unspecified**. **Audio language (when missing or incorrect)** provides a per-source manual override. This affects reporting, not the sound of the video. A source's catalog language (`lang: en`) describes its interface/search language, not every video's spoken language.
 
