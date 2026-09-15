@@ -22,6 +22,14 @@ Refresh the repository and update the installed sources to **0.2.0**. Install **
 
 Settings are independent for each installed source and use Zangetsu's native settings system, present in 2.1.1. Defaults preserve the previous anime and manga behavior. Backup manga images use the second CDN supplied by the chapter, falling back to the primary when there is no second CDN. Manganato is marked as mixed/adult-capable content, matching its upstream flag, and may be hidden by the app's content filter.
 
+## Manga compatibility in Zangetsu 2.1.1
+
+The app's Manga tab and metadata title matching accept **Mihon sources only** (IDs beginning with `mihon:`). Installing our JavaScript Manganato source does not make it eligible for that flow, even with the adult-source filter enabled. The source type in the manifest cannot override this app restriction.
+
+For manga reading in 2.1.1, add the official [Keiyoushi repository](https://keiyoushi.github.io/docs/guides/getting-started) under **Providers → Mihon**, install **Manganato**, and select that source. The upstream index is `https://github.com/keiyoushi/extensions/raw/repo/index.pb`. The installed Mihon Manganato was detected on the user's phone on 15 September 2026. Cloudflare checks remain a separate website requirement.
+
+The JavaScript Manganato bundle is retained for compatible direct-source flows and development; it is not the supported route for 2.1.1's Manga catalog. Earlier instructions suggesting it would appear there were incorrect.
+
 ## CineStream scope
 
 Adapted from [Megix/CSX CineStream](https://github.com/SaurabhKaperwan/CSX/tree/master/CineStream). This first native port includes **Cinemeta movie and series catalogs, search, details, seasons/episodes, and VaPlayer direct playback**. It does not include every Cloudstream extractor. Upstream is currently on hiatus.
