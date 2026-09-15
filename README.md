@@ -1,6 +1,6 @@
 # Serenity Zangetsu Sources
 
-Native video sources for Zangetsu. Current release: **0.2.1**.
+Native video sources for Zangetsu. Current release: **0.2.2**.
 
 ## Install or update
 
@@ -8,7 +8,7 @@ Native video sources for Zangetsu. Current release: **0.2.1**.
 https://raw.githubusercontent.com/Serenity-MIST/zangetsu-sources/main/index.json
 ```
 
-Refresh the repository and update the installed sources to 0.2.1. Open the settings icon beside a source to change its preferences.
+Refresh the repository and update the installed sources to 0.2.2. Open the settings icon beside a source to change its preferences.
 
 ## Sources
 
@@ -17,7 +17,7 @@ Refresh the repository and update the installed sources to 0.2.1. Open the setti
 
 Manganato and manga support have been removed from this repository at the owner's request. An already-installed manga source must be uninstalled in the app; removing it from a manifest cannot uninstall it remotely.
 
-## 0.2.1 fixes
+## 0.2.2 fixes
 
 ### The Mentalist and same-named movies/series
 
@@ -66,3 +66,7 @@ node settings-tests.js
 Edit shared helpers, `anime-core.js` or `cine-core.js`, then regenerate the four standalone `serenity-*.js` files and manifest. No package installation is required.
 
 Anime bundles and shared helpers: Apache-2.0. CineStream adapted core and generated bundle: GPL-3.0-or-later. See [NOTICE.md](NOTICE.md), [LICENSE](LICENSE) and [LICENSE-GPL-3.0](LICENSE-GPL-3.0).
+
+### Season-zero compatibility
+The native source excludes season-zero specials because Zangetsu pairs source episodes with catalogue episodes by list position. Regular episodes start at S1E1, preventing specials from taking their playback slots. A regression fixture checks that a leading special cannot shift seasons 1 and 2.
+

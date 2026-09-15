@@ -14,7 +14,7 @@ assert.equal(a.stream('https://video.example/test.m3u8',{name:'HD',kind:'sub'},'
 a.save({audio:'sub',subtitles:true,homeOrder:'latest'});out=await a.getVideoSources(ep);assert.equal(out[0].kind,'sub');assert.equal(a.homeOrder([{title:'Popular'},{title:'Latest'}])[0].title,'Latest');assert.equal(a.stream('https://video.example/test.m3u8',{name:'HD',kind:'sub'},'https://video.example/',[{kind:'captions',file:'/en.vtt'}]).subtitles.length,1);
 const c=load('serenity-cinestream.js',u=>{
   if(u.includes('/api.php'))return {data:{stream_urls:['https://video.example/one.m3u8','https://video.example/two.m3u8','https://video.example/three.m3u8']},default_subs:[{url:'https://video.example/en.vtt',lang:'English'}]};
-  if(u.includes('/meta/'))return {meta:{id:'tt1234',name:'A Series',type:'series',videos:[{season:2,episode:1,title:'New',released:'2020-01-01'},{season:1,episode:1,title:'Pilot',released:'2019-01-01'},{season:3,episode:1,title:'Future',released:'2999-01-01'}]}};
+  if(u.includes('/meta/'))return {meta:{id:'tt1234',name:'A Series',type:'series',videos:[{season:0,episode:1,title:"Special",released:"2010-01-01"},{season:2,episode:1,title:'New',released:'2020-01-01'},{season:1,episode:1,title:'Pilot',released:'2019-01-01'},{season:3,episode:1,title:'Future',released:'2999-01-01'}]}};
   return {metas:[{id:'tt1234',type:u.includes('/movie/')?'movie':'series',name:'Test'}]};
 });
 c.save({catalog:'series',streamServer:'2',subtitles:false});let results=await c.search('A & B',1);assert.equal(results.length,1);assert(c.calls[0].u.includes('search=A%20%26%20B.json'));await c.popular(2);assert(c.calls[1].u.includes('skip=50.json'));assert.equal((await c.search('Test',2)).length,0);

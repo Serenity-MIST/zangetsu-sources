@@ -34,7 +34,7 @@ function cineEpisodes(m){
   function episode(v){var p=Object.assign({},payload);if(m.type==='series'){p.season=Number(v.season);p.episode=Number(v.episode);}
     return {id:m.id+(m.type==='series'?':'+p.season+':'+p.episode:''),title:m.type==='movie'?m.name:'S'+p.season+'E'+p.episode+' · '+(v.title||'Episode '+p.episode),number:m.type==='movie'?1:p.episode,url:base+'#cine='+encodeURIComponent(JSON.stringify(p)),date:v.released||m.released||null,thumbnail:v.thumbnail||null};}
   if(m.type==='movie')return [episode({})];
-  return (m.videos||[]).filter(function(v){return Number.isInteger(Number(v.season))&&Number(v.season)>=0&&Number.isInteger(Number(v.episode))&&Number(v.episode)>0&&(!v.released||isNaN(Date.parse(v.released))||Date.parse(v.released)<=Date.now());}).sort(function(a,b){return a.season-b.season||a.episode-b.episode;}).map(episode);
+  return (m.videos||[]).filter(function(v){return Number.isInteger(Number(v.season))&&Number(v.season)>0&&Number.isInteger(Number(v.episode))&&Number(v.episode)>0&&(!v.released||isNaN(Date.parse(v.released))||Date.parse(v.released)<=Date.now());}).sort(function(a,b){return a.season-b.season||a.episode-b.episode;}).map(episode);
 }
 async function getEpisodes(url){return cineEpisodes(await cineMeta(url));}
 async function getDetail(url){var m=await cineMeta(url),x=cineItem(m);x.description=m.description||'';x.genres=m.genres||m.genre||[];x.studios=[];x.status=m.type==='movie'?'completed':'unknown';x.episodes=cineEpisodes(m);return x;}
