@@ -13,7 +13,7 @@ function parseCatalogue(body){
 }
 async function search(query,page){query=String(query||'');return parseCatalogue(await request(SITE+'/filter?keyword='+encodeURIComponent(query)+'&page='+pageNum(page)+'&vrf='+(query?encodeURIComponent(vrf(query)):'')));}
 async function popular(page){return parseCatalogue(await request(SITE+'/most-viewed/?page='+pageNum(page)));}
-async function getHome(){return [{title:'Popular',items:await popular(1)},{title:'Latest updates',items:parseCatalogue(await request(SITE+'/latest-updated/?page=1'))}];}
+async function getHome(){return homeOrder([{title:'Popular',items:await popular(1)},{title:'Latest updates',items:parseCatalogue(await request(SITE+'/latest-updated/?page=1'))}]);}
 function seriesUrl(url){return absolute(url,SITE+'/').split('#')[0].split('?')[0].replace(/\/ep-\d+$/,'');}
 async function getDetail(url){
   url=seriesUrl(url);var doc=html(await request(url)),t=first(doc,function(n){return /^(h1|h2)$/.test(n.tag)&&has(n,'title');});if(!t)throw new Error(NAME+': title not found; site markup may have changed');
@@ -36,7 +36,7 @@ async function episodesFromDocument(url,doc){
   }),function(x){return x.id;}).sort(function(a,b){return (a.number||0)-(b.number||0);});
 }
 function serverNodes(markup){return all(html(markup),function(n){return n.tag==='li'&&!!n.a['data-link-id']&&!has(n,'download-icon');}).map(function(n){var p=n.parent;while(p&&!has(p,'type'))p=p.parent;var label=p?content(first(p,function(x){return x.tag==='label';}))||p.a['data-type']||'sub':'sub';return {id:n.a['data-link-id'],name:content(n),kind:/dub/i.test(label)?'dub':'sub'};});}
-function stream(url,server,ref,tracks){return {url:absolute(url,ref),label:server.name+' · '+server.kind,container:/\.mp4(?:[?#]|$)/i.test(url)?'mp4':'hls',kind:server.kind,headers:{Referer:ref,Origin:origin(ref)},subtitles:(tracks||[]).filter(function(t){return t.kind==='captions'&&t.file;}).map(function(t){return {url:absolute(t.file,ref),lang:t.label||'und',label:t.label||'Subtitles',format:/\.srt(?:[?#]|$)/i.test(t.file)?'srt':'vtt'};})};}
+function stream(url,server,ref,tracks){return {url:absolute(url,ref),label:server.name+' · '+server.kind,container:/\.mp4(?:[?#]|$)/i.test(url)?'mp4':'hls',kind:server.kind,headers:{Referer:ref,Origin:origin(ref)},subtitles:(setting('subtitles')?tracks||[]:[]).filter(function(t){return t.kind==='captions'&&t.file;}).map(function(t){return {url:absolute(t.file,ref),lang:t.label||'und',label:t.label||'Subtitles',format:/\.srt(?:[?#]|$)/i.test(t.file)?'srt':'vtt'};})};}
 async function resolveEmbed(url,server,ref,depth){
   if(depth>3)throw new Error('Too many nested players');url=absolute(url,ref);
   // These upstream routes require Android's binary-rewriting local proxy.
@@ -61,8 +61,8 @@ async function getVideoSources(episodeUrl){
   var markup=typeof data.result==='string'?data.result:data.result&&data.result.html;if(typeof markup!=='string')throw new Error('Invalid server list');
   var servers=serverNodes(markup),out=[],failures=[];
   // Resolve a bounded set, two at a time; one dead mirror must not freeze the app.
-  var candidates=servers.filter(function(s){return !/kiwi|vidplay/i.test(s.name);}).slice(0,6);
-  for(var i=0;i<candidates.length;i+=2){var batch=await Promise.all(candidates.slice(i,i+2).map(async function(s){try{var r=await request(SITE+'/ajax/server?get='+encodeURIComponent(s.id),ref,true);if(!r.result||!r.result.url)throw new Error('Missing embed URL');return await resolveEmbed(r.result.url,s,ref,0);}catch(e){failures.push(s.name+': '+e.message);return [];}}));batch.forEach(function(v){out=out.concat(v);});if(out.some(function(v){return v.kind==='sub';})&&out.some(function(v){return v.kind==='dub';}))break;}
+  var candidates=servers.filter(function(s){return !/kiwi|vidplay/i.test(s.name)&&(setting('audio')==='both'||s.kind===setting('audio'));}).slice(0,6);
+  for(var i=0;i<candidates.length;i+=2){var batch=await Promise.all(candidates.slice(i,i+2).map(async function(s){try{var r=await request(SITE+'/ajax/server?get='+encodeURIComponent(s.id),ref,true);if(!r.result||!r.result.url)throw new Error('Missing embed URL');return await resolveEmbed(r.result.url,s,ref,0);}catch(e){failures.push(s.name+': '+e.message);return [];}}));batch.forEach(function(v){out=out.concat(v);});if(out.length&&(setting('audio')!=='both'||(out.some(function(v){return v.kind==='sub';})&&out.some(function(v){return v.kind==='dub';}))))break;}
   if(!out.length)throw new Error(NAME+': no supported direct servers. '+(failures.join('; ')||'Available hosts require the Android proxy.'));
   return unique(out,function(v){return v.url+'|'+v.kind;});
 }

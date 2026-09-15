@@ -51,7 +51,7 @@ function pageNum(p) { p=Math.floor(Number(p)||1); return Math.max(1,p); }
 function headers(ref) { return {Referer:ref || SITE+'/'}; }
 async function request(url, ref, json) {
   var h=headers(ref); if(json){h.Accept='application/json, text/javascript, */*; q=0.01';h['X-Requested-With']='XMLHttpRequest';}
-  var res=await fetch(url,{headers:h,timeoutMs:12000});
+  var res=await fetch(url,{headers:h,timeoutMs:Number(setting('timeout'))||12000});
   if(res.status<200 || res.status>=300) throw new Error(NAME+': HTTP '+res.status+' from '+origin(url));
   var body=res.body != null ? res.body : await res.text();
   if(json){try{return JSON.parse(body);}catch(e){throw new Error(NAME+': source returned invalid JSON');}}

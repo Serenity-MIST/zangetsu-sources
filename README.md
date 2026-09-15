@@ -1,71 +1,61 @@
 # Serenity Zangetsu Sources
 
-Experimental native JavaScript ports of three Yuzono anime providers and Keiyoushi's Manganato provider.
+Native JavaScript sources for Zangetsu. Current release: **0.2.0**.
 
-## Install in Zangetsu
+## Install or update
 
-Paste this **manifest URL** into Zangetsu's native JavaScript provider-repository field:
+Use this repository URL in Zangetsu:
 
 ```
 https://raw.githubusercontent.com/Serenity-MIST/zangetsu-sources/main/index.json
 ```
 
-Refresh the repository, then install the providers you want. This is a Zangetsu manifest, not an Aniyomi APK index. Manganato is marked as mixed/adult-capable content, matching its upstream content warning; it may be hidden by the app's content filter.
+Refresh the repository and update the installed sources to **0.2.0**. Install **CineStream** from the same repository. Open the settings icon beside an installed source to change its preferences. Reopen the title/episode or refresh its home page to apply the relevant change to newly loaded content.
 
-| Provider | Upstream variant | Initial domain |
-|---|---|---|
-| Anikoto | Yuzono AnikotoTheme | anikototv.to |
-| AnimeKai (Unoriginal) | Yuzono KotoKai | animekaitv.to |
-| AniWave (Unoriginal) | Yuzono AniWave | animewave.to |
-| Manganato | Keiyoushi MangaBox | www.natomanga.com |
+| Source | Features | Source settings |
+| --- | --- | --- |
+| Anikoto | Anime catalog and direct sub/dub streams | Audio: both/sub/dub; subtitle tracks; popular/latest home order; request timeout |
+| AnimeKai (Unoriginal) | Yuzono's KotoKai variant | Same anime settings |
+| AniWave (Unoriginal) | Yuzono's AnikotoTheme variant | Same anime settings |
+| Manganato | Manga catalog, chapters and image pages | Primary/backup image server; popular/latest home order; request timeout |
+| CineStream | Cinemeta movies/series and VaPlayer playback | Movies/series/both; all servers or server 1/2/3; subtitle tracks; request timeout |
 
-The “Unoriginal” labels come from Yuzono. They distinguish these variants from other sites with similar names.
+Settings are independent for each installed source and use Zangetsu's native settings system, present in 2.1.1. Defaults preserve the previous anime and manga behavior. Backup manga images use the second CDN supplied by the chapter, falling back to the primary when there is no second CDN. Manganato is marked as mixed/adult-capable content, matching its upstream flag, and may be hidden by the app's content filter.
 
-## What is implemented
+## CineStream scope
 
-- Native manifest and four standalone provider files, with no APK dependency.
-- Popular/latest lists, text search, details and episode/chapter lists.
-- Anime server discovery, direct HLS/MP4 URLs, nested player pages, plain and AES-CBC encrypted getSources responses, and caption tracks.
-- Manganato chapter API and ordered image-page lists, with image Referer headers.
-- Explicit HTTP/parser errors, bounded server attempts and separate stable provider IDs.
+Adapted from [Megix/CSX CineStream](https://github.com/SaurabhKaperwan/CSX/tree/master/CineStream). This first native port includes **Cinemeta movie and series catalogs, search, details, seasons/episodes, and VaPlayer direct playback**. It does not include every Cloudstream extractor. Upstream is currently on hiatus.
 
-## Limits — read before testing
+Two Videasy routes tested during development failed upstream (Downloader HTTP 404 and Neon HTTP 500). They are excluded from the published source. The native port does not include torrent/debrid support, the Kitsu anime catalog, Cloudstream's Android settings UI or binary networking features. Use the existing anime sources for anime.
 
-This is a **0.1.2 experimental port**, not a claim of verified in-app playback. Automated fixture tests check the native contracts and selected parsing/extraction cases. Website availability is a separate check. Phone/TV playback and reading require testing in Zangetsu.
+A catalog entry does not guarantee a stream is available. Selecting a single VaPlayer server narrows the returned list; use **All available** if that server is missing. Subtitle tracks appear only when supplied by the playback API. New/unreleased series episodes are omitted when their release date is known.
 
-Yuzono uses an Android local proxy for Kiwi-Stream, VidPlay, mewcdn, and getSourcesNew paths that can require removing leading bytes from video segments. Zangetsu's native JavaScript contract does not expose that proxy. These paths are not advertised as playable by this port. A repository alone cannot add a missing native player capability. Direct supported servers are attempted instead; if none work, the provider reports an error.
+## Verification
 
-The supplementary mapper API, source preference UI, automatic domain rotation, manga image merging and alternate image-CDN retry are not included in this version. Manganato's old entries may require adding the title again under its current domain. Never assume an old domain is equivalent just because it has the same branding.
+Checked on 15 September 2026:
 
-## Verify on your devices
+- CineStream: home lists, search, movie detail and series episodes loaded. Inception and Breaking Bad S1E1 returned HLS playlists; the first VaPlayer stream for each decoded three seconds of video/audio successfully in FFmpeg. CineStream playback on the phone/TV still needs a user test.
+- After adding settings: Black Summoner episode 1 sub and dub on Anikoto returned HTTP 200 playlists and video segments; seeking to 90 seconds and decoding succeeded; subtitle responses were valid WebVTT.
+- Automated fixtures verify all five provider contracts, per-source setting IDs, changing settings without reloading, audio filtering, subtitles, timeouts, home ordering, manga backup CDN selection, CineStream search/paging, season ordering, future episode filtering, movie playback payloads and server selection.
+- Existing AES-CBC and HMAC-SHA256 implementations still match independent Node crypto tests.
+- The user confirmed anime playback on their phone running Zangetsu 2.1.1 after the 0.1.2 fix. Earlier network checks also passed Black Summoner episodes 1–2 sub/dub on all three anime sources and Solo Leveling episode 1 on Anikoto. These are sampled checks, not verification of every title or server.
 
-For each provider: install, load Popular, search, open details, load episodes/chapters, and play/read. For anime, test sub and dub separately, seeking, subtitles and switching servers. Repeat on Android TV. Record app version, provider version, source, episode/chapter, selected server and exact error. Do not include account credentials in reports.
+## Anime playback compatibility
 
-## Development
+Version 0.1.2 fixed MegaPlay playback by decrypting the `enc` response and signing the playlist URL with a short-lived token. This remains included in 0.2.0. Reopen an episode to obtain fresh links; old resolved links expire.
 
-Node.js is needed only to build/test locally; the app downloads plain JavaScript.
+Kiwi-Stream, VidPlay, mewcdn and getSourcesNew routes requiring Android binary segment rewriting remain unsupported by this native JS port. Supported direct servers are attempted instead. Mapper APIs, automatic domain rotation and manga image merging are not implemented.
+
+## Development and licensing
+
+No package installation is required. Build and test using Node:
 
 ```
 node build.js
 node tests.js
+node settings-tests.js
 ```
 
-Edit common.js and anime-core.js or manga-core.js; regenerate the four serenity-*.js files. Bump the version in build.js when publishing a change. Commit both editable and generated files. No package installation, secret keys or service account is required.
+Edit `settings.js`, `common.js` and the appropriate `anime-core.js`, `manga-core.js` or `cine-core.js`; then regenerate all `serenity-*.js` files and `index.json`. Commit editable and generated files together. `player-crypto.js` supports the anime players.
 
-See NOTICE.md and LICENSE for attribution and licensing. Source websites remain external services; their availability and markup can change.
-
-
-
-## 0.1.2 playback fix and verification
-
-MegaPlay requires two steps: decrypt its `enc` response, then sign the playlist URL. Version 0.1.1 handled only the first step and its unsigned master playlists returned HTTP 403. Version 0.1.2 generates the same 90-second HMAC-SHA256 URL token as the public web player. Existing signed URLs are preserved, and other hosts are not signed.
-
-Verified on 2026-09-15:
-- Black Summoner episodes 1 and 2, sub and dub: Anikoto, AnimeKai and AniWave returned HTTP 200 master playlists, variant playlists and actual MPEG-TS video segments. FFmpeg successfully decoded the first three seconds of each tested stream, including audio and video.
-- Solo Leveling episode 1, sub and dub on Anikoto: the same checks passed.
-- Cryptography regression tests compare AES-CBC decoding and HMAC-SHA256 signing against Node's independent crypto implementation.
-
-The official Zangetsu app passes provider headers into `Media(playUrl, httpHeaders: s.headers)` and configures `extension_picky=0,allowed_extensions=ALL`, which permits the CDN's video segments with `.jpg`, `.html` and `.js` suffixes. Those sampled segments contain real MPEG-TS bytes; no segment-stripping proxy was needed for these tests. Source files examined: `lib/core/provider/provider_manager.dart`, `lib/core/models/video_source.g.dart`, and `lib/features/player/player_controller.dart` in https://github.com/Spyou/Zangetsu.
-
-Refresh the repository and update the installed providers to 0.1.2. Reopen the episode to obtain a fresh signed URL. Tokens expire after 90 seconds, so old resolved links must not be reused. These are live network/decoder checks, not a claim that the user's installed Zangetsu build has been tested directly.
-- Additional playback checks: seeking to 90 seconds and decoding three seconds succeeded for Black Summoner episode 1 sub/dub; both subtitle requests returned HTTP 200 and valid WebVTT.
+The existing anime/manga sources and shared helpers are Apache-2.0. CineStream's adapted core and generated bundle are GPL-3.0-or-later. See [NOTICE.md](NOTICE.md), [LICENSE](LICENSE) and [LICENSE-GPL-3.0](LICENSE-GPL-3.0) for attribution and complete license texts. This is an independent port, not an official Zangetsu, Yuzono, Keiyoushi or CSX release.
