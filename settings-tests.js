@@ -9,10 +9,9 @@ const a=load('serenity-anikoto.js',u=>{
   return '';
 });
 const ep='https://anikototv.to/demo#zangetsu='+encodeURIComponent(JSON.stringify({ids:'sub,dub',epurl:'/demo/ep-1'}));
-a.save({audio:'dub',timeout:'8000',subtitles:false});let out=await a.getVideoSources(ep);assert.equal(out.length,1);assert.equal(out[0].kind,'dub');assert(!a.calls.some(x=>x.u.includes('get=sub')));assert(a.calls.every(x=>x.o.timeoutMs===8000));
+a.save({audio:'dub',timeout:'8000',subtitles:false});let out=await a.getVideoSources(ep);assert.equal(out.length,1);assert.equal(out[0].kind,'dub');assert(!a.calls.some(x=>x.u.includes('get=sub')));assert(a.calls.filter(x=>x.u.includes('/ajax/')).every(x=>x.o.timeoutMs===8000));
 assert.equal(a.stream('https://video.example/test.m3u8',{name:'HD',kind:'sub'},'https://video.example/',[{kind:'captions',file:'/en.vtt'}]).subtitles.length,0);
 a.save({audio:'sub',subtitles:true,homeOrder:'latest'});out=await a.getVideoSources(ep);assert.equal(out[0].kind,'sub');assert.equal(a.homeOrder([{title:'Popular'},{title:'Latest'}])[0].title,'Latest');assert.equal(a.stream('https://video.example/test.m3u8',{name:'HD',kind:'sub'},'https://video.example/',[{kind:'captions',file:'/en.vtt'}]).subtitles.length,1);
-const m=load('serenity-manganato.js',()=>'<script>const cdns=["https://primary.example","https://backup.example"];const chapterImages=["a.jpg"];</script>');m.save({imageCdn:'backup'});assert.equal((await m.getPages('https://www.natomanga.com/manga/x/1'))[0].url,'https://backup.example/a.jpg');
 const c=load('serenity-cinestream.js',u=>{
   if(u.includes('/api.php'))return {data:{stream_urls:['https://video.example/one.m3u8','https://video.example/two.m3u8','https://video.example/three.m3u8']},default_subs:[{url:'https://video.example/en.vtt',lang:'English'}]};
   if(u.includes('/meta/'))return {meta:{id:'tt1234',name:'A Series',type:'series',videos:[{season:2,episode:1,title:'New',released:'2020-01-01'},{season:1,episode:1,title:'Pilot',released:'2019-01-01'},{season:3,episode:1,title:'Future',released:'2999-01-01'}]}};
@@ -20,10 +19,16 @@ const c=load('serenity-cinestream.js',u=>{
 });
 c.save({catalog:'series',streamServer:'2',subtitles:false});let results=await c.search('A & B',1);assert.equal(results.length,1);assert(c.calls[0].u.includes('search=A%20%26%20B.json'));await c.popular(2);assert(c.calls[1].u.includes('skip=50.json'));assert.equal((await c.search('Test',2)).length,0);
 let detail=await c.getDetail('https://v3-cinemeta.strem.io/meta/series/tt1234.json');assert.equal(detail.episodes.length,2);assert.match(detail.episodes[0].title,/^S1E1/);assert.notEqual(detail.episodes[0].id,detail.episodes[1].id);
-out=await c.getVideoSources(detail.episodes[1].url);assert.equal(out.length,1);assert.equal(out[0].label,'VaPlayer 2');assert.equal(out[0].subtitles.length,0);assert.equal(out[0].headers.Referer,'https://nextgencloudfabric.com/');assert(c.calls.at(-1).u.includes('type=tv&season=2&episode=1'));
-c.save({streamServer:'all',subtitles:true});out=await c.getVideoSources(detail.episodes[0].url);assert.equal(out.length,3);assert.equal(out[0].subtitles[0].lang,'English');
-const movie=c.cineEpisodes({id:'tt1234',type:'movie',name:'Movie'});assert.equal(movie.length,1);await c.getVideoSources(movie[0].url);assert.match(c.calls.at(-1).u,/type=movie$/);
+out=await c.getVideoSources(detail.episodes[1].url);assert.equal(out.length,1);assert.match(out[0].label,/^VaPlayer 2/);assert.equal(out[0].subtitles.length,0);assert.equal(out[0].headers.Referer,'https://nextgencloudfabric.com/');assert(c.calls.filter(x=>x.u.includes('/api.php')).at(-1).u.includes('type=tv&season=2&episode=1'));
+c.save({streamServer:'all',subtitles:true});out=await c.getVideoSources(detail.episodes[0].url);assert.equal(out.length,3);assert.equal(out[0].subtitles[0].lang,'en');
+const movie=c.cineEpisodes({id:'tt1234',type:'movie',name:'Movie'});assert.equal(movie.length,1);await c.getVideoSources(movie[0].url);assert.match(c.calls.filter(x=>x.u.includes('/api.php')).at(-1).u,/type=movie$/);
 await assert.rejects(()=>c.getVideoSources('invalid'),/refresh/);assert.throws(()=>c.cineIdentity('https://example.com/unrelated'),/refresh/);
-console.log('PASS: settings schema, runtime source ID, live setting changes, audio filtering, timeout, captions, home order, manga backup CDN, CineStream catalog, search, paging, seasons, future episodes, movies, server selection and headers.');
+const same=[{title:'The Mentalist',tmdbIsTv:false},{title:'The Mentalist',tmdbIsTv:true}];
+assert.equal(c.rankCineSearch(same,'The Mentalist')[0].tmdbIsTv,true);c.save({sameTitle:'movie'});assert.equal(c.rankCineSearch(same,'The Mentalist')[0].tmdbIsTv,false);
+assert.equal(a.languageCode('English'),'en');assert.equal(a.languageCode('jpn'),'ja');assert.equal(a.languageCode('unknown'),null);
+assert.equal(a.playlistLanguages('#EXTM3U\n#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID="a",NAME="English",LANGUAGE="en"')[0],'en');
+a.save({audioLanguage:'ja'});assert.equal((await a.audioMetadata([{url:'https://example.com/a.mp4',container:'mp4',label:'Test'}]))[0].audioLang,'ja');
+a.save({audioLanguage:'auto'});assert.equal((await a.audioMetadata([{url:'https://example.com/a.mp4',container:'mp4',label:'Test'}]))[0].audioLang,null);
+console.log('PASS: settings schema, runtime source ID, live setting changes, audio filtering, timeout, captions, home order, CineStream catalog, search, paging, seasons, future episodes, movies, server selection and headers.');
 }
 main().catch(e=>{console.error(e);process.exitCode=1;});

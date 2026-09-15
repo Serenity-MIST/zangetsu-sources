@@ -12,10 +12,7 @@ anime=load('serenity-anikoto.js',u=>{if(u.includes('/ajax/server/list'))return {
 let videos=await anime.getVideoSources(eps[0].url);assert.equal(videos.length,1);assert.equal(videos[0].container,'hls');assert.equal(videos[0].subtitles[0].url,'https://player.example/en.vtt');assert.equal(videos[0].headers.Referer,'https://player.example/');
 const proxy=load('serenity-anikoto.js',()=>({result:'<li data-link-id="x">Kiwi-Stream</li>'}));await assert.rejects(()=>proxy.getVideoSources(eps[0].url),/Android proxy/);
 const broken=load('serenity-anikoto.js',()=>'<html>error</html>');await assert.rejects(()=>broken.request('https://example.com',null,true),/invalid JSON/);
-let manga=load('serenity-manganato.js',u=>u.includes('/api/manga/')?{success:true,data:{chapters:[{chapter_slug:'chapter-2',chapter_name:'Second',chapter_num:2},{chapter_slug:'chapter-1',chapter_name:'First',chapter_num:1}]}}:'<script>const cdns=["https://images.example"];const chapterImages=["book/1.jpg","book/2.jpg"];</script>');
-let chapters=await manga.getEpisodes('https://www.natomanga.com/manga/demo');assert.equal(chapters[0].title,'First');assert.equal(chapters[0].url,'https://www.natomanga.com/manga/demo/chapter-1');let pages=await manga.getPages(chapters[0].url);assert.equal(pages.length,2);assert.equal(pages[0].url,'https://images.example/book/1.jpg');assert.equal(pages[0].headers.Referer,chapters[0].url);
-manga=load('serenity-manganato.js',()=>'<div class="container-chapter-reader"><img src="//images.example/1.jpg"></div>');assert.equal((await manga.getPages(chapters[0].url))[0].url,'https://images.example/1.jpg');assert.equal(manga.normalizeQuery('Café: Test!'),'cafe_test');assert.throws(()=>manga.absolute('javascript:alert(1)','https://example.com'),/Invalid/);
-console.log('PASS: five provider contracts, catalogue, RC4 vector, episodes, mirror failure isolation, captions, proxy errors, malformed JSON, chapters and both image formats.');
+console.log('PASS: four provider contracts, catalogue, RC4 vector, episodes, mirror failure isolation, captions, proxy errors, malformed JSON.');
 }
 main().catch(e=>{console.error(e);process.exitCode=1;});
 

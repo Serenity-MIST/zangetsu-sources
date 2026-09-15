@@ -12,15 +12,15 @@ function setting(key) {
 }
 function choice(key,label,values,initial){return {key:key,label:label,type:'enum',default:initial,options:values.map(function(v){return {value:v[0],label:v[1]};})};}
 function getSettings(){
-  var out=[choice('timeout','Request timeout',[['8000','8 seconds'],['12000','12 seconds']],'12000')];
+  var out=[choice('audioLanguage','Audio language (when missing or incorrect)',[['auto','Detect automatically'],['en','English'],['ja','Japanese'],['zh','Chinese'],['ko','Korean'],['hi','Hindi'],['es','Spanish'],['fr','French'],['de','German'],['pt','Portuguese'],['ru','Russian'],['ar','Arabic']],'auto'),choice('timeout','Request timeout',[['8000','8 seconds'],['12000','12 seconds']],'12000')];
   if(TYPE==='anime')out=out.concat([
     choice('audio','Episode audio',[['both','Sub and dub'],['sub','Sub only'],['dub','Dub only']],'both'),
     {key:'subtitles',label:'Include subtitle tracks',type:'bool',default:true}
   ]);
-  if(TYPE==='anime'||TYPE==='manga')out.push(choice('homeOrder','Show first on home',[['popular','Popular'],['latest','Latest updates']],'popular'));
-  if(TYPE==='manga')out.push(choice('imageCdn','Chapter image server',[['primary','Primary'],['backup','Backup (when available)']],'primary'));
+  if(TYPE==='anime')out.push(choice('homeOrder','Show first on home',[['popular','Popular'],['latest','Latest updates']],'popular'));
   if(TYPE==='movie')out=out.concat([
     choice('streamServer','Stream servers',[['all','All available'],['1','Server 1'],['2','Server 2'],['3','Server 3']],'all'),
+    choice('sameTitle','When a movie and series share a title',[['series','Prefer series'],['movie','Prefer movie']],'series'),
     choice('catalog','Browse and search',[['both','Movies and series'],['movie','Movies'],['series','Series']],'both'),
     {key:'subtitles',label:'Include subtitle tracks',type:'bool',default:true}
   ]);

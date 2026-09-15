@@ -1,62 +1,61 @@
 # Serenity Zangetsu Sources
 
-Native JavaScript sources for Zangetsu. Current release: **0.2.0**.
+Native video sources for Zangetsu. Current release: **0.2.1**.
 
 ## Install or update
-
-Use this repository URL in Zangetsu:
 
 ```
 https://raw.githubusercontent.com/Serenity-MIST/zangetsu-sources/main/index.json
 ```
 
-Refresh the repository and update the installed sources to **0.2.0**. Install **CineStream** from the same repository. Open the settings icon beside an installed source to change its preferences. Reopen the title/episode or refresh its home page to apply the relevant change to newly loaded content.
+Refresh the repository and update the installed sources to 0.2.1. Open the settings icon beside a source to change its preferences.
 
-| Source | Features | Source settings |
-| --- | --- | --- |
-| Anikoto | Anime catalog and direct sub/dub streams | Audio: both/sub/dub; subtitle tracks; popular/latest home order; request timeout |
-| AnimeKai (Unoriginal) | Yuzono's KotoKai variant | Same anime settings |
-| AniWave (Unoriginal) | Yuzono's AnikotoTheme variant | Same anime settings |
-| Manganato | Manga catalog, chapters and image pages | Primary/backup image server; popular/latest home order; request timeout |
-| CineStream | Cinemeta movies/series and VaPlayer playback | Movies/series/both; all servers or server 1/2/3; subtitle tracks; request timeout |
+## Sources
 
-Settings are independent for each installed source and use Zangetsu's native settings system, present in 2.1.1. Defaults preserve the previous anime and manga behavior. Backup manga images use the second CDN supplied by the chapter, falling back to the primary when there is no second CDN. Manganato is marked as mixed/adult-capable content, matching its upstream flag, and may be hidden by the app's content filter.
+- **Anikoto**, **AnimeKai (Unoriginal)** and **AniWave (Unoriginal)**: anime search, details, episodes and supported direct sub/dub streams.
+- **CineStream**: Cinemeta movies/series and VaPlayer playback, adapted from Megix/CSX.
 
-## Manga compatibility in Zangetsu 2.1.1
+Manganato and manga support have been removed from this repository at the owner's request. An already-installed manga source must be uninstalled in the app; removing it from a manifest cannot uninstall it remotely.
 
-The app's Manga tab and metadata title matching accept **Mihon sources only** (IDs beginning with `mihon:`). Installing our JavaScript Manganato source does not make it eligible for that flow, even with the adult-source filter enabled. The source type in the manifest cannot override this app restriction.
+## 0.2.1 fixes
 
-For manga reading in 2.1.1, add the official [Keiyoushi repository](https://keiyoushi.github.io/docs/guides/getting-started) under **Providers → Mihon**, install **Manganato**, and select that source. The upstream index is `https://github.com/keiyoushi/extensions/raw/repo/index.pb`. The installed Mihon Manganato was detected on the user's phone on 15 September 2026. Cloudflare checks remain a separate website requirement.
+### The Mentalist and same-named movies/series
 
-The JavaScript Manganato bundle is retained for compatible direct-source flows and development; it is not the supported route for 2.1.1's Manga catalog. Earlier instructions suggesting it would appear there were incorrect.
+The old search interleaved movies before series. Searching The Mentalist put the 2011 short film before the 2008–2015 series. Zangetsu accepts the first matching title, so it resolved the wrong entry, produced only one movie item, and could not play the expected episodes.
 
-## CineStream scope
+Exact search matches now come first, and a movie/series title collision prefers the series by default. **When a movie and series share a title** can be set to prefer movies. **Browse and search** can also limit results to movies or series. Results carry IMDb IDs, available TMDB IDs and the app's TV-series flag.
 
-Adapted from [Megix/CSX CineStream](https://github.com/SaurabhKaperwan/CSX/tree/master/CineStream). This first native port includes **Cinemeta movie and series catalogs, search, details, seasons/episodes, and VaPlayer direct playback**. It does not include every Cloudstream extractor. Upstream is currently on hiatus.
+If Zangetsu previously cached the wrong title, reopen its **Wrong title?** picker and select The Mentalist TV series (2008–2015, IMDb tt1196946). Updating a provider cannot erase the app's saved title match. The corrected search order prevents a new automatic match from choosing the short film first.
 
-Two Videasy routes tested during development failed upstream (Downloader HTTP 404 and Neon HTTP 500). They are excluded from the published source. The native port does not include torrent/debrid support, the Kitsu anime catalog, Cloudstream's Android settings UI or binary networking features. Use the existing anime sources for anime.
+### Audio language
 
-A catalog entry does not guarantee a stream is available. Selecting a single VaPlayer server narrows the returned list; use **All available** if that server is missing. Subtitle tracks appear only when supplied by the playback API. New/unreleased series episodes are omitted when their release date is known.
+Streams now supply Zangetsu's `audioLang` field when known. HLS audio-track language tags are normalized to codes such as `en`, `ja` and `zh`. English-dub anime servers have an English fallback; subbed audio is not assumed to be Japanese. Subtitle languages are normalized separately.
+
+If a playlist declares several audio languages, the stream label lists them and the player can choose its audio track. If the upstream stream omits language metadata, it remains **Audio: unspecified**. **Audio language (when missing or incorrect)** provides a per-source manual override. This affects reporting, not the sound of the video. A source's catalog language (`lang: en`) describes its interface/search language, not every video's spoken language.
+
+## Settings
+
+All sources: audio-language detection/override and request timeout.
+
+Anime: sub/dub/both, subtitle tracks, popular/latest home order.
+
+CineStream: movies/series/both, same-title preference, all VaPlayer servers or server 1/2/3, subtitle tracks.
 
 ## Verification
 
-Checked on 15 September 2026:
+On 15 September 2026:
 
-- CineStream: home lists, search, movie detail and series episodes loaded. Inception and Breaking Bad S1E1 returned HLS playlists; the first VaPlayer stream for each decoded three seconds of video/audio successfully in FFmpeg. CineStream playback on the phone/TV still needs a user test.
-- After adding settings: Black Summoner episode 1 sub and dub on Anikoto returned HTTP 200 playlists and video segments; seeking to 90 seconds and decoding succeeded; subtitle responses were valid WebVTT.
-- Automated fixtures verify all five provider contracts, per-source setting IDs, changing settings without reloading, audio filtering, subtitles, timeouts, home ordering, manga backup CDN selection, CineStream search/paging, season ordering, future episode filtering, movie playback payloads and server selection.
-- Existing AES-CBC and HMAC-SHA256 implementations still match independent Node crypto tests.
-- The user confirmed anime playback on their phone running Zangetsu 2.1.1 after the 0.1.2 fix. Earlier network checks also passed Black Summoner episodes 1–2 sub/dub on all three anime sources and Solo Leveling episode 1 on Anikoto. These are sampled checks, not verification of every title or server.
+- The Mentalist search selected the series first, loaded 153 episodes/specials, and returned three VaPlayer links each for S1E1 and S1E2. The first stream for each episode successfully decoded three seconds of audio/video in FFmpeg.
+- Automated tests cover source contracts, search collisions, settings, episode mapping, headers, captions, language normalization and existing anime cryptography.
+- Earlier checks passed Inception and Breaking Bad S1E1 through VaPlayer; Black Summoner episode 1 sub/dub passed seeking and subtitle checks after source settings were added. The user confirmed anime playback on Zangetsu 2.1.1.
 
-## Anime playback compatibility
+These are sampled checks, not a guarantee for all titles and servers. CineStream currently ports **VaPlayer**, not the full upstream extractor registry. Tested Videasy routes failed upstream and are not advertised. No torrent/debrid integration is included.
 
-Version 0.1.2 fixed MegaPlay playback by decrypting the `enc` response and signing the playlist URL with a short-lived token. This remains included in 0.2.0. Reopen an episode to obtain fresh links; old resolved links expire.
+## Anime compatibility
 
-Kiwi-Stream, VidPlay, mewcdn and getSourcesNew routes requiring Android binary segment rewriting remain unsupported by this native JS port. Supported direct servers are attempted instead. Mapper APIs, automatic domain rotation and manga image merging are not implemented.
+The MegaPlay encrypted response decoder and short-lived playlist signing remain included. Reopen an episode for fresh links. Android-only binary segment proxy routes (Kiwi-Stream, VidPlay, mewcdn/getSourcesNew) remain unsupported by these JavaScript sources.
 
 ## Development and licensing
-
-No package installation is required. Build and test using Node:
 
 ```
 node build.js
@@ -64,6 +63,6 @@ node tests.js
 node settings-tests.js
 ```
 
-Edit `settings.js`, `common.js` and the appropriate `anime-core.js`, `manga-core.js` or `cine-core.js`; then regenerate all `serenity-*.js` files and `index.json`. Commit editable and generated files together. `player-crypto.js` supports the anime players.
+Edit shared helpers, `anime-core.js` or `cine-core.js`, then regenerate the four standalone `serenity-*.js` files and manifest. No package installation is required.
 
-The existing anime/manga sources and shared helpers are Apache-2.0. CineStream's adapted core and generated bundle are GPL-3.0-or-later. See [NOTICE.md](NOTICE.md), [LICENSE](LICENSE) and [LICENSE-GPL-3.0](LICENSE-GPL-3.0) for attribution and complete license texts. This is an independent port, not an official Zangetsu, Yuzono, Keiyoushi or CSX release.
+Anime bundles and shared helpers: Apache-2.0. CineStream adapted core and generated bundle: GPL-3.0-or-later. See [NOTICE.md](NOTICE.md), [LICENSE](LICENSE) and [LICENSE-GPL-3.0](LICENSE-GPL-3.0).

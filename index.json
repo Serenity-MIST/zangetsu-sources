@@ -1,11 +1,11 @@
 {
   "name": "Serenity Zangetsu Sources",
-  "description": "Native sources with settings: Anikoto, AnimeKai, AniWave, Manganato and CineStream (VaPlayer movies/series). See README for supported features and verification.",
+  "description": "Native sources with settings: Anikoto, AnimeKai, AniWave and CineStream (VaPlayer movies/series). See README for supported features and verification.",
   "sources": [
     {
       "id": "serenity-anikoto",
       "name": "Anikoto",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "type": "anime",
       "lang": "en",
       "file": "serenity-anikoto.js",
@@ -15,7 +15,7 @@
     {
       "id": "serenity-animekai",
       "name": "AnimeKai (Unoriginal)",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "type": "anime",
       "lang": "en",
       "file": "serenity-animekai.js",
@@ -25,7 +25,7 @@
     {
       "id": "serenity-aniwave",
       "name": "AniWave (Unoriginal)",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "type": "anime",
       "lang": "en",
       "file": "serenity-aniwave.js",
@@ -35,22 +35,12 @@
     {
       "id": "serenity-cinestream",
       "name": "CineStream",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "type": "movie",
       "lang": "en",
       "file": "serenity-cinestream.js",
       "logo": "https://v3-cinemeta.strem.io/favicon.ico",
       "nsfw": false
-    },
-    {
-      "id": "serenity-manganato",
-      "name": "Manganato",
-      "version": "0.2.0",
-      "type": "manga",
-      "lang": "en",
-      "file": "serenity-manganato.js",
-      "logo": "https://www.natomanga.com/favicon.ico",
-      "nsfw": true
     }
   ]
 }
