@@ -19,3 +19,11 @@ console.log('PASS: four provider contracts, catalogue, RC4 vector, episodes, mir
 }
 main().catch(e=>{console.error(e);process.exitCode=1;});
 
+const crypto=require('node:crypto');
+const decoder=load('serenity-anikoto.js',()=> '');
+for(const payload of [{file:'https://example.com/master.m3u8'},[{file:'https://example.com/long/path/master.m3u8?test=1'}]]){
+ const key=Buffer.alloc(32);key.write('i?LMTAx0Q6,:}50U');const cipher=crypto.createCipheriv('aes-256-cbc',key,Buffer.from("W0;27ToaUpl_P%'c"));const enc=Buffer.concat([cipher.update(JSON.stringify(payload),'utf8'),cipher.final()]).toString('base64url');assert.equal(JSON.stringify(decoder.decodePlayerSources(enc)),JSON.stringify(payload));assert.equal(decoder.sourceFiles({enc})[0],Array.isArray(payload)?payload[0].file:payload.file);
+}
+for(const sources of ['https://example.com/a.m3u8',{file:'https://example.com/a.m3u8'},[{file:'https://example.com/a.m3u8'}]])assert.equal(decoder.sourceFiles({sources})[0],'https://example.com/a.m3u8');
+assert.throws(()=>decoder.decodePlayerSources('bad'),/Invalid/);
+console.log('PASS: encrypted source decoding against Node crypto and string/object/array source formats.');

@@ -47,8 +47,8 @@ async function resolveEmbed(url,server,ref,depth){
     var type=(url.split(/[?#]/)[0].match(/\/(sub|dub|hsub)$/)||[])[1]||'',id=encodeURIComponent(m[1]);
     // getSourcesNew requires byte-rewriting proxy and is deliberately not advertised.
     var api=await request(host+'/stream/getSources?id='+id+'&id='+id+'&type='+type+'&type='+type,url,true);
-    if(typeof api.sources!=='string'||!/^https?:\/\//i.test(api.sources))throw new Error(server.name+': direct stream missing; proxy-only or changed API');
-    return [stream(api.sources,server,host+'/',api.tracks)];
+    var files=sourceFiles(api);if(!files.length)throw new Error(server.name+': direct stream missing; proxy-only or changed API');
+    return files.map(function(file){return stream(file,server,host+'/',api.tracks);});
   }
   m=body.match(/<iframe[^>]+src=["']([^"']+)["']/i);if(m)return resolveEmbed(m[1],server,url,depth+1);
   m=body.match(/https?:\/\/[^\s"'<>]+\.m3u8[^\s"'<>]*/i);if(m)return [stream(text(m[0]),server,host+'/')];
@@ -66,4 +66,5 @@ async function getVideoSources(episodeUrl){
   if(!out.length)throw new Error(NAME+': no supported direct servers. '+(failures.join('; ')||'Available hosts require the Android proxy.'));
   return unique(out,function(v){return v.url+'|'+v.kind;});
 }
+
 
