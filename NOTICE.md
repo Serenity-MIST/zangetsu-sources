@@ -29,3 +29,7 @@ Changes: native JavaScript ports, English alias matching, ascending episodes, is
 ## AnimeDex 0.2.5
 
 `animedex-core.js` is an original Apache-2.0 native adapter implementing the public catalog and player request/response protocol observed on https://animedex.fun in Chrome on 16 September 2026. No AnimeDex website application code is bundled or executed. AnimeDex and Luna remain third-party services. The provider preserves Luna proxy URLs and does not include the website's accounts, social features, ads, torrents, manga or embedded players.
+
+## AnimeDex 0.2.6
+
+The original adapter in `src/animedex-core.js` now implements the public MF, Kiwi, AVX, Luna, MegaPlay and VidNest response protocols observed on AnimeDex and VidNest on 16 September 2026. Website ordering and server names are retained for interoperability. No downloaded website scripts or advertising code are bundled or executed. Native extraction, validation and settings are locally implemented. The earlier statement that Luna proxy URLs are always preserved is superseded for Draco: its response supplies a directly playable original URL. See `docs/animedex-0.2.6.md`. Editable modules have moved to `src/`; their licenses are unchanged.

@@ -5,7 +5,7 @@
     {
       "id": "serenity-anikoto",
       "name": "Anikoto",
-      "version": "0.2.5",
+      "version": "0.2.6",
       "type": "anime",
       "lang": "en",
       "file": "serenity-anikoto.js",
@@ -15,7 +15,7 @@
     {
       "id": "serenity-animekai",
       "name": "AnimeKai (Unoriginal)",
-      "version": "0.2.5",
+      "version": "0.2.6",
       "type": "anime",
       "lang": "en",
       "file": "serenity-animekai.js",
@@ -25,7 +25,7 @@
     {
       "id": "serenity-aniwave",
       "name": "AniWave (Unoriginal)",
-      "version": "0.2.5",
+      "version": "0.2.6",
       "type": "anime",
       "lang": "en",
       "file": "serenity-aniwave.js",
@@ -35,7 +35,7 @@
     {
       "id": "serenity-cinestream",
       "name": "CineStream",
-      "version": "0.2.5",
+      "version": "0.2.6",
       "type": "movie",
       "lang": "en",
       "file": "serenity-cinestream.js",
@@ -45,7 +45,7 @@
     {
       "id": "serenity-animegg",
       "name": "AnimeGG",
-      "version": "0.2.5",
+      "version": "0.2.6",
       "type": "anime",
       "lang": "en",
       "file": "serenity-animegg.js",
@@ -55,7 +55,7 @@
     {
       "id": "serenity-videasy",
       "name": "Videasy",
-      "version": "0.2.5",
+      "version": "0.2.6",
       "type": "movie",
       "lang": "en",
       "file": "serenity-videasy.js",
@@ -65,7 +65,7 @@
     {
       "id": "serenity-animedex",
       "name": "AnimeDex",
-      "version": "0.2.5",
+      "version": "0.2.6",
       "type": "anime",
       "lang": "en",
       "file": "serenity-animedex.js",

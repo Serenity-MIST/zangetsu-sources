@@ -1,5 +1,5 @@
 const fs=require('fs'),vm=require('vm'),assert=require('assert/strict'),path=require('path');
-function load(name,handler){let calls=[];let c={fetch:async(u,o={})=>{calls.push({u,o});return {status:200,body:await handler(u,o)}}};vm.createContext(c);vm.runInContext(fs.readFileSync(path.join(__dirname,'serenity-'+name+'.js'),'utf8'),c);c.calls=calls;return c;}
+function load(name,handler){let calls=[];let c={fetch:async(u,o={})=>{calls.push({u,o});return {status:200,body:await handler(u,o)}}};vm.createContext(c);vm.runInContext(fs.readFileSync(path.join(__dirname,'..','serenity-'+name+'.js'),'utf8'),c);c.calls=calls;return c;}
 (async()=>{
 let a=load('animegg',async u=>u.includes('/embed/')?'var videoSources = [{file:"/play/test.mp4", label:"720p"}];':'<div class="tab-pane" id="subbed-Animegg"><iframe src="/embed/1"></iframe></div>');
 assert.equal(a.ggCards('<a class="mse" href="/series/test"><h2>Kuro no Shoukanshi</h2><div>Alt Titles : Black Summoner; Test</div></a>',true,'Black Summoner')[0].title,'Black Summoner');

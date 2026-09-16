@@ -1,6 +1,6 @@
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
-const manifest=require('./index.json');
-function load(file,handler){const calls=[];const c={fetch:async(url,options)=>{calls.push({url,options});const r=await handler(url,options);return {status:200,body:typeof r==='string'?r:JSON.stringify(r)};}};vm.createContext(c);vm.runInContext(fs.readFileSync(require('node:path').join(__dirname,file),'utf8'),c);c.calls=calls;return c;}
+const manifest=require('../index.json');
+function load(file,handler){const calls=[];const c={fetch:async(url,options)=>{calls.push({url,options});const r=await handler(url,options);return {status:200,body:typeof r==='string'?r:JSON.stringify(r)};}};vm.createContext(c);vm.runInContext(fs.readFileSync(require('node:path').join(__dirname,'..',file),'utf8'),c);c.calls=calls;return c;}
 async function main(){
 for(const s of manifest.sources){const c=load(s.file,()=> '');assert.equal(c.getInfo().type,s.type);assert.equal(c.getInfo().version,s.version);for(const f of ['search','popular','getHome','getDetail','getEpisodes',s.type!=='manga'?'getVideoSources':'getPages'])assert.equal(typeof c[f],'function');}
 const cards='<div class="ani items"><div class="item"><div class="poster"><img data-src="/cover.jpg"></div><a class="name" href="/anime/demo/ep-1">Demo &amp; Test</a></div></div>';

@@ -1,6 +1,6 @@
 # Serenity Zangetsu Sources
 
-Native video sources for Zangetsu. Current release: **0.2.5**.
+Native video sources for Zangetsu. Current release: **0.2.6**.
 
 ## Install or update
 
@@ -8,9 +8,15 @@ Native video sources for Zangetsu. Current release: **0.2.5**.
 https://raw.githubusercontent.com/Serenity-MIST/zangetsu-sources/main/index.json
 ```
 
-Refresh the repository and update the installed sources to 0.2.5. Open the settings icon beside a source to change its preferences.
+Refresh the repository and update the installed sources to 0.2.6. Open the settings icon beside a source to change its preferences.
 
-## 0.2.5: AnimeDex
+## 0.2.6: AnimeDex server settings
+
+Adds the 10 verified server entries in screenshot order and an **Enable all servers** switch (on by default). Turn it off to choose individual servers. Ten entries produced decodable streams across Black Summoner and Solo Leveling episode 1; the 17 routes that failed testing are excluded. Failed results are filtered. See the [server-by-server report](docs/animedex-0.2.6.md) for audio availability, fixes and limits. Ads and website scripts are not loaded in the app.
+
+Editable modules now live in `src/`, tests in `tests/`, and reports in `docs/`. Installed bundle URLs remain unchanged. The six other providers retain their previous runtime with only their version raised.
+
+## 0.2.5: AnimeDex (release history)
 
 Adds **AnimeDex** from https://animedex.fun. Refresh the repository, update existing providers, and install AnimeDex from the repository list. The previous six providers retain their 0.2.4 runtime code with only version numbers updated.
 
@@ -78,8 +84,8 @@ The MegaPlay encrypted response decoder and short-lived playlist signing remain 
 
 ```
 node build.js
-node tests.js
-node settings-tests.js
+node tests/tests.js
+node tests/settings-tests.js
 ```
 
 Edit shared helpers, `anime-core.js` or `cine-core.js`, then regenerate the seven standalone `serenity-*.js` files and manifest. No package installation is required.
