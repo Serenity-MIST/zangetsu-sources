@@ -1,6 +1,6 @@
 # Serenity Zangetsu Sources
 
-Native video sources for Zangetsu. Current release: **0.2.4**.
+Native video sources for Zangetsu. Current release: **0.2.5**.
 
 ## Install or update
 
@@ -8,7 +8,15 @@ Native video sources for Zangetsu. Current release: **0.2.4**.
 https://raw.githubusercontent.com/Serenity-MIST/zangetsu-sources/main/index.json
 ```
 
-Refresh the repository and update the installed sources to 0.2.4. Open the settings icon beside a source to change its preferences.
+Refresh the repository and update the installed sources to 0.2.5. Open the settings icon beside a source to change its preferences.
+
+## 0.2.5: AnimeDex
+
+Adds **AnimeDex** from https://animedex.fun. Refresh the repository, update existing providers, and install AnimeDex from the repository list. The previous six providers retain their 0.2.4 runtime code with only version numbers updated.
+
+Includes search, home rows, paginated popular titles, details, ordered episodes, subtitles and two tested Luna routes: **Quasar (sub only)** and **Nova (sub/dub)**. Source settings select audio, servers, captions and request timeout. A failed server does not discard results from another. Quasar is never labeled as dub because its upstream dub request returned the sub link during testing. Other website embed, torrent and unverified server routes are not included. Anime only; no manga provider is added.
+
+AnimeDex supplies its catalog and stream resolution; playback uses Luna's proxy URLs unchanged so playlist segments, headers and captions retain their upstream handling. Nova shares MegaPlay infrastructure with some existing anime providers, so this is not an entirely independent fallback.
 
 ## 0.2.4: working baseline plus backups
 
@@ -74,10 +82,13 @@ node tests.js
 node settings-tests.js
 ```
 
-Edit shared helpers, `anime-core.js` or `cine-core.js`, then regenerate the six standalone `serenity-*.js` files and manifest. No package installation is required.
+Edit shared helpers, `anime-core.js` or `cine-core.js`, then regenerate the seven standalone `serenity-*.js` files and manifest. No package installation is required.
 
 Anime bundles and shared helpers: Apache-2.0. CineStream adapted core and generated bundle: GPL-3.0-or-later. See [NOTICE.md](NOTICE.md), [LICENSE](LICENSE) and [LICENSE-GPL-3.0](LICENSE-GPL-3.0).
 
 ### Season-zero compatibility
 The native source excludes season-zero specials because Zangetsu pairs source episodes with catalogue episodes by list position. Regular episodes start at S1E1, preventing specials from taking their playback slots. A regression fixture checks that a leading special cannot shift seasons 1 and 2.
+
+
+AnimeDex verification on 16 September 2026: generated provider search/home/pagination and Black Summoner episodes 1–2 passed; Quasar sub, Nova sub and Nova dub each decoded three seconds of audio/video per episode. Caption files were fetched and cue content checked. These were PC decoding checks; phone/TV playback has not yet been verified.
 

@@ -25,3 +25,7 @@ Changes made 15 September 2026: translated Cinemeta catalog/search/detail/episod
 AnimeGG parsing and extraction are adapted from Yuzono AnimeGG.kt. Videasy's session/seed request and response protocol are adapted from Yuzono CinebyExtractor.kt and CinebyDto.kt, inspected at commit bcc555edec1d9e7cf416f681e1049f56a882c9d9. Upstream: https://github.com/yuzono/anime-extensions (Apache-2.0; Copyright 2015 Javier Tomás and contributors).
 
 Changes: native JavaScript ports, English alias matching, ascending episodes, isolated settings, fresh session handling and a playback-header correction. Only the tested Yoru/CDN backend is included. AnimeGG remains Apache-2.0. The Videasy bundle combines Apache-2.0-derived extraction with the GPL-3.0-or-later CSX catalog helpers and is distributed under GPL-3.0-or-later. All editable sources and build files are supplied.
+
+## AnimeDex 0.2.5
+
+`animedex-core.js` is an original Apache-2.0 native adapter implementing the public catalog and player request/response protocol observed on https://animedex.fun in Chrome on 16 September 2026. No AnimeDex website application code is bundled or executed. AnimeDex and Luna remain third-party services. The provider preserves Luna proxy URLs and does not include the website's accounts, social features, ads, torrents, manga or embedded players.

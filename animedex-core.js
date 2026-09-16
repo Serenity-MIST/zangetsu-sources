@@ -1,0 +1,24 @@
+// SPDX-License-Identifier: Apache-2.0
+// Original native adapter for AnimeDex's public catalog and Luna stream protocol.
+var dexBaseSettings=getSettings;
+getSettings=function(){return dexBaseSettings().filter(function(s){return s.key!=='audioLanguage';}).concat([choice('dexServer','AnimeDex servers',[['all','Quasar + Nova'],['anibd','Quasar (sub only)'],['megaplay','Nova (sub/dub)']],'all')]);};
+function dexHeaders(){return {Referer:SITE+'/',Origin:SITE,'User-Agent':'Mozilla/5.0','Content-Type':'application/json'};}
+async function dexApi(path,body){var options={headers:dexHeaders(),timeoutMs:Number(setting('timeout'))||12000};if(body){options.method='POST';options.body=JSON.stringify(body);}var r=await fetch(SITE+'/api/'+path,options),raw=r.body!=null?r.body:await r.text(),d;try{d=JSON.parse(raw);}catch(e){throw Error('AnimeDex: invalid server response');}if(r.status<200||r.status>=300||d.error)throw Error('AnimeDex: '+(d.error||'HTTP '+r.status));return d;}
+function dexItem(a){if(!a||!a.id||!a.name)return null;var x=item(SITE+'/anime/'+encodeURIComponent(a.id),a.name,a.poster);x.anilistId=Number(a.anilistId)||null;x.malId=Number(a.malId)||null;return x;}
+function dexItems(rows){return (rows||[]).map(dexItem).filter(Boolean);}
+async function search(query,page){var d=await dexApi('anime/search?q='+encodeURIComponent(query)+'&page='+pageNum(page));return dexItems(d.animes);}
+async function popular(page){return dexItems((await dexApi('anime/category/most-popular?page='+pageNum(page))).animes);}
+async function getHome(){var d=await dexApi('anime/home');return homeOrder([{title:'Trending',items:dexItems(d.trendingAnimes)},{title:'Latest episodes',items:dexItems(d.latestEpisodeAnimes)}]);}
+function dexSlug(url){var m=String(url).match(/\/anime\/([^/#?]+)(?:[?#].*)?$/);if(!m)throw Error('AnimeDex: reopen the title from search');return decodeURIComponent(m[1]);}
+async function dexEpisodes(slug,id){var d=await dexApi('anime/episodes/'+encodeURIComponent(slug));return unique((d.episodes||[]).filter(function(e){return Number(e.number)>0&&Number.isInteger(Number(e.number));}).map(function(e){var n=Number(e.number);return {id:slug+':'+n,title:e.title?'Episode '+n+' · '+e.title:'Episode '+n,number:n,date:e.airDate||null,url:SITE+'/watch/'+encodeURIComponent(slug)+'/ep-'+n+'#dex='+encodeURIComponent(JSON.stringify({id:Number(id),ep:n}))};}),function(e){return e.id;}).sort(function(a,b){return a.number-b.number;});}
+async function getDetail(url){var slug=dexSlug(url),d=await dexApi('anime/info/'+encodeURIComponent(slug)),a=d.anime&&d.anime.info;if(!a)throw Error('AnimeDex: title not found');var x=dexItem(a);x.description=text(a.description);x.genres=a.genres||[];x.status=a.status==='FINISHED'?'completed':a.status==='RELEASING'?'ongoing':'unknown';x.episodes=await dexEpisodes(slug,a.anilistId);return x;}
+async function getEpisodes(url){return (await getDetail(url)).episodes;}
+function dexStreams(d,provider,kind){var captions=setting('subtitles')?unique((d.subtitles||[]).filter(function(s){return /^https?:\/\//i.test(s.url||'');}).map(function(s){return {url:s.url,lang:languageCode(s.label)||languageCode(s.language)||'und',label:s.label||s.language||'Subtitles',format:/\.ass(?:[?#]|$)/i.test(s.url)?'ass':/\.srt(?:[?#]|$)/i.test(s.url)?'srt':'vtt'};}),function(s){return s.url;}):[];
+  return (d.sources||[]).filter(function(s){return /^https?:\/\//i.test(s.url||'')&&(s.isHLS||s.isMP4||/\.(m3u8|mp4)(?:[?#]|$)/i.test(s.url));}).map(function(s){return {url:s.url,label:'AnimeDex · '+(provider==='anibd'?'Quasar':'Nova')+' · '+kind,quality:s.quality||null,container:s.isHLS?'hls':'mp4',kind:kind,audioLang:kind==='dub'?'en':null,headers:d.headers||{},subtitles:captions};});}
+async function getVideoSources(url){var mark=String(url).split('#dex=')[1];if(!mark)throw Error('AnimeDex: refresh the episode list');var ep=JSON.parse(decodeURIComponent(mark));if(!Number.isInteger(ep.id)||ep.id<1||!Number.isInteger(ep.ep)||ep.ep<1)throw Error('AnimeDex: invalid episode');var tasks=[],errors=[],server=setting('dexServer'),audio=setting('audio');
+  // Quasar returns sub audio even when dub is requested, so never advertise it as dub.
+  if(server!=='megaplay'&&audio!=='dub')tasks.push(['anibd','sub']);
+  if(server!=='anibd'){if(audio!=='dub')tasks.push(['megaplay','sub']);if(audio!=='sub')tasks.push(['megaplay','dub']);}
+  if(!tasks.length)throw Error('AnimeDex: Quasar supports sub only; select Nova for dub');
+  var rows=await Promise.all(tasks.map(async function(t){try{return dexStreams(await dexApi('stream/luna',{provider:t[0],anilistId:ep.id,ep:ep.ep,subType:t[1]}),t[0],t[1]);}catch(e){errors.push(e.message);return [];}}));var out=unique([].concat.apply([],rows),function(s){return s.url;});if(!out.length)throw Error('AnimeDex: no playable streams. '+errors.join('; '));return out;
+}

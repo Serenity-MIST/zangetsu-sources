@@ -1,11 +1,11 @@
 {
   "name": "serenity-zangetsu-sources",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "private": true,
   "description": "Native JavaScript provider ports for Zangetsu",
   "license": "Apache-2.0 AND GPL-3.0-or-later",
   "scripts": {
     "build": "node build.js",
-    "test": "node tests.js && node settings-tests.js && node backup-tests.js"
+    "test": "node tests.js && node settings-tests.js && node backup-tests.js && node animedex-tests.js"
   }
 }
