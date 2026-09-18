@@ -33,3 +33,8 @@ Changes: native JavaScript ports, English alias matching, ascending episodes, is
 ## AnimeDex 0.2.6
 
 The original adapter in `src/animedex-core.js` now implements the public MF, Kiwi, AVX, Luna, MegaPlay and VidNest response protocols observed on AnimeDex and VidNest on 16 September 2026. Website ordering and server names are retained for interoperability. No downloaded website scripts or advertising code are bundled or executed. Native extraction, validation and settings are locally implemented. The earlier statement that Luna proxy URLs are always preserved is superseded for Draco: its response supplies a directly playable original URL. See `docs/animedex-0.2.6.md`. Editable modules have moved to `src/`; their licenses are unchanged.
+
+## 0.2.7
+
+AnimeGG and AnimeDex code and bundles were removed at the repository owner's request. Their earlier credit entries and reports describe historical releases. The remaining anime adapter now preserves per-site alternate titles and performs season-aware result ranking. No application matching code is bundled. CineStream and Videasy runtime logic is unchanged.
+

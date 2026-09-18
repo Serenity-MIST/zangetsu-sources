@@ -1,15 +1,13 @@
 'use strict';
 const fs=require('node:fs');const path=require('node:path');
 const root=__dirname;
-const version='0.2.6';
+const version='0.2.7';
 const definitions=[
  {id:'serenity-anikoto',name:'Anikoto',site:'https://anikototv.to',type:'anime'},
  {id:'serenity-animekai',name:'AnimeKai (Unoriginal)',site:'https://animekaitv.to',type:'anime'},
  {id:'serenity-aniwave',name:'AniWave (Unoriginal)',site:'https://animewave.to',type:'anime'},
  {id:'serenity-cinestream',name:'CineStream',site:'https://v3-cinemeta.strem.io',type:'movie',core:'cine',license:'GPL-3.0-or-later'},
- {id:'serenity-animegg',name:'AnimeGG',site:'https://www.animegg.org',type:'anime',core:'animegg'},
  {id:'serenity-videasy',name:'Videasy',site:'https://v3-cinemeta.strem.io',type:'movie',core:'cine',extra:'cineby',license:'GPL-3.0-or-later'},
- {id:'serenity-animedex',name:'AnimeDex',site:'https://animedex.fun',type:'anime',core:'animedex'}
 ];
 const common=fs.readFileSync(path.join(root,'src','common.js'),'utf8');
 const sources=definitions.map(d=>{
@@ -19,7 +17,7 @@ const sources=definitions.map(d=>{
  fs.writeFileSync(path.join(root,file),banner+config+common+'\n'+fs.readFileSync(path.join(root,'src','languages.js'),'utf8')+'\n'+fs.readFileSync(path.join(root,'src','settings.js'),'utf8')+'\n'+(d.type==='anime'?fs.readFileSync(path.join(root,'src','player-crypto.js'),'utf8')+'\n':'')+fs.readFileSync(path.join(root,'src',(d.core||d.type)+'-core.js'),'utf8')+(d.extra?'\n'+fs.readFileSync(path.join(root,'src',d.extra+'-core.js'),'utf8'):''));
  return {id:d.id,name:d.name,version,type:d.type,lang:'en',file,logo:d.site+'/favicon.ico',nsfw:d.type==='manga'};
 });
-fs.writeFileSync(path.join(root,'index.json'),JSON.stringify({name:'Serenity Zangetsu Sources',description:'Native sources with settings: Anikoto, AnimeKai, AniWave, AnimeGG, AnimeDex, CineStream and Videasy. See README for supported features and verification.',sources},null,2)+'\n');
+fs.writeFileSync(path.join(root,'index.json'),JSON.stringify({name:'Serenity Zangetsu Sources',description:'Native sources with settings: Anikoto, AnimeKai, AniWave, CineStream and Videasy. See README for supported features and verification.',sources},null,2)+'\n');
 console.log('Built '+sources.length+' standalone providers and index.json');
 
 
