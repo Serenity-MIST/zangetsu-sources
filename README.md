@@ -1,6 +1,6 @@
 # Serenity Zangetsu Sources
 
-Native anime, movie and series sources for Zangetsu. Current version: **0.2.8**.
+Native anime, movie and series sources for Zangetsu. Current version: **0.2.9**.
 
 ## Install or update
 
@@ -8,7 +8,7 @@ Native anime, movie and series sources for Zangetsu. Current version: **0.2.8**.
 https://raw.githubusercontent.com/Serenity-MIST/zangetsu-sources/main/index.json
 ```
 
-Refresh the repository and update installed sources to 0.2.8.
+Refresh the repository and update installed sources to 0.2.9.
 
 **AnimeGG, AnimeDex and Videasy have been removed**, including their bundles and editable code. If already installed in Zangetsu, uninstall those sources in the app: changing this manifest cannot remotely uninstall them.
 
@@ -38,7 +38,7 @@ These are PC decoding checks, not a new phone/TV playback confirmation or an upt
 
 ## Settings
 
-Anime sources offer sub/dub selection, subtitle tracks, request timeout, home ordering and audio-language override. CineStream offers movies/series filtering, same-title preference and server selection. StreamPlay adds All available, Vidlink and VaPlayer backend selection, quality labels, subtitle tracks and a quick CDN availability check.
+Anime sources offer sub/dub selection, subtitle tracks, request timeout, home ordering and audio-language override. CineStream offers movies/series filtering, same-title preference and server selection. StreamPlay adds Fastest available, Vidlink and VaPlayer backend selection, quality labels, subtitle tracks and bounded CDN checks. Fastest available returns the first working backend rather than waiting for every backend. See [the 0.2.9 timeout report](docs/streamplay-0.2.9.md).
 
 ## Development
 
