@@ -38,3 +38,9 @@ The original adapter in `src/animedex-core.js` now implements the public MF, Kiw
 
 AnimeGG and AnimeDex code and bundles were removed at the repository owner's request. Their earlier credit entries and reports describe historical releases. The remaining anime adapter now preserves per-site alternate titles and performs season-aware result ranking. No application matching code is bundled. CineStream and Videasy runtime logic is unchanged.
 
+
+## 0.2.8
+
+Videasy was removed at the repository owner's request on 9 October 2026. Its earlier credits describe historical releases. `src/streamplay-core.js` and `serenity-streamplay.js` are native JavaScript adaptations of StreamPlay's Vidlink and VaPlayer routines by Phisher98, Hexated and contributors. The public upstream repository currently publishes compiled plugins; editable logic was inspected in the public source fork [Genxster1998/cloudstream-extensions-phisher](https://github.com/Genxster1998/cloudstream-extensions-phisher/tree/79c6e51f6ee4dadb73e341ce4a62cc4be21f4a7f/StreamPlay), commit `79c6e51f6ee4dadb73e341ce4a62cc4be21f4a7f`, and cross-checked against [upstream](https://github.com/phisher98/cloudstream-extensions-phisher) StreamPlay build 687. The upstream README specifies GPL version 3 or later. These modified combined bundles are GPL-3.0-or-later; see LICENSE-GPL-3.0.
+
+Changes: native request and model contracts; current Vidlink qualities/captions parsing; preservation of signed URLs and playback headers; exact TMDB season/episode requests; parallel independent backends; bounded CDN HEAD checks; per-provider settings; Cinemeta catalogue helpers reused from the existing CSX-derived module. No Android plugin binary, remote website scripts, private credentials, torrents or debrid integrations are bundled. RiveStream candidates failed live access checks and are excluded. All editable ported code is included.

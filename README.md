@@ -1,6 +1,6 @@
 # Serenity Zangetsu Sources
 
-Native anime, movie and series sources for Zangetsu. Current version: **0.2.7**.
+Native anime, movie and series sources for Zangetsu. Current version: **0.2.8**.
 
 ## Install or update
 
@@ -8,9 +8,9 @@ Native anime, movie and series sources for Zangetsu. Current version: **0.2.7**.
 https://raw.githubusercontent.com/Serenity-MIST/zangetsu-sources/main/index.json
 ```
 
-Refresh the repository and update installed sources to 0.2.7.
+Refresh the repository and update installed sources to 0.2.8.
 
-**AnimeGG and AnimeDex have been removed**, including their bundles and editable code. If already installed in Zangetsu, uninstall those two sources in the app: changing this manifest cannot remotely uninstall them.
+**AnimeGG, AnimeDex and Videasy have been removed**, including their bundles and editable code. If already installed in Zangetsu, uninstall those sources in the app: changing this manifest cannot remotely uninstall them.
 
 ## Season matching fix
 
@@ -26,9 +26,9 @@ Anikoto, AnimeKai and AniWave now retain each site's English/Romaji names, prior
 | AnimeKai (Unoriginal) | Anime, available sub/dub direct streams |
 | AniWave (Unoriginal) | Anime, available sub/dub direct streams |
 | CineStream | Movies and series, VaPlayer routes |
-| Videasy | Movies and series, Yoru/CDN routes |
+| StreamPlay | Movies and series, Vidlink and VaPlayer backends |
 
-No manga sources are included. Anime stream extraction is unchanged from 0.2.6; CineStream and Videasy change only their version number.
+No manga sources are included. StreamPlay is a native port of selected backends from Phisher98/Hexated StreamPlay, with Cinemeta catalogue and episode metadata. It does not include every Cloudstream backend, torrents, debrid or Android plugin screens. See [the 0.2.8 report](docs/streamplay-0.2.8.md).
 
 ## Verification
 
@@ -38,7 +38,7 @@ These are PC decoding checks, not a new phone/TV playback confirmation or an upt
 
 ## Settings
 
-Anime sources offer sub/dub selection, subtitle tracks, request timeout, home ordering and audio-language override. CineStream offers movies/series filtering, same-title preference and server selection. Videasy uses the tested Yoru/CDN backend.
+Anime sources offer sub/dub selection, subtitle tracks, request timeout, home ordering and audio-language override. CineStream offers movies/series filtering, same-title preference and server selection. StreamPlay adds All available, Vidlink and VaPlayer backend selection, quality labels, subtitle tracks and a quick CDN availability check.
 
 ## Development
 
@@ -48,8 +48,8 @@ Editable modules are in `src/`, regression checks in `tests/`, reports in `docs/
 node build.js
 node tests/tests.js
 node tests/settings-tests.js
-node tests/backup-tests.js
 node tests/season-tests.js
+node tests/streamplay-tests.js
 ```
 
-No package installation is required. Anime code and shared helpers retain Apache-2.0 licensing. CineStream and Videasy bundles combine the relevant Apache-2.0 helpers with GPL-3.0-or-later catalog code. See [NOTICE.md](NOTICE.md), [LICENSE](LICENSE) and [LICENSE-GPL-3.0](LICENSE-GPL-3.0).
+No package installation is required. Anime code and shared helpers retain Apache-2.0 licensing. The CineStream and StreamPlay bundles combine the relevant Apache-2.0 helpers with GPL-3.0-or-later catalog code. See [NOTICE.md](NOTICE.md), [LICENSE](LICENSE) and [LICENSE-GPL-3.0](LICENSE-GPL-3.0).

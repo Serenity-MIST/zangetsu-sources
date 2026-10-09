@@ -17,6 +17,6 @@ function card(title,jp,url){return '<div class="item"><a class="name" href="'+ur
   assert.notEqual(c.animeIdentity('Example: The Movie'),c.animeIdentity('Example'));
   assert.notEqual(c.animeIdentity('Example Part 2'),c.animeIdentity('Example Part 1'));
  }
- const manifest=require('../index.json');assert.equal(manifest.sources.length,5);assert(!manifest.sources.some(s=>/animegg|animedex/.test(s.id)));assert(manifest.sources.every(s=>s.version==='0.2.7'));
+ const manifest=require('../index.json');assert.equal(manifest.sources.length,5);assert(!manifest.sources.some(s=>/animegg|animedex|videasy/.test(s.id)));assert(manifest.sources.every(s=>s.version==='0.2.8'));
  console.log('PASS: all three source domains, original/sequel selection, English/Romaji aliases, parts, ordinal/Roman season labels, missing-season refusal, broad searches and five-source manifest.');
 })().catch(e=>{console.error(e);process.exitCode=1});

@@ -12,7 +12,7 @@ anime=load('serenity-anikoto.js',u=>{if(u.includes('/ajax/server/list'))return {
 let videos=await anime.getVideoSources(eps[0].url);assert.equal(videos.length,1);assert.equal(videos[0].container,'hls');assert.equal(videos[0].subtitles[0].url,'https://player.example/en.vtt');assert.equal(videos[0].headers.Referer,'https://player.example/');
 const proxy=load('serenity-anikoto.js',()=>({result:'<li data-link-id="x">Kiwi-Stream</li>'}));await assert.rejects(()=>proxy.getVideoSources(eps[0].url),/Android proxy/);
 const broken=load('serenity-anikoto.js',()=>'<html>error</html>');await assert.rejects(()=>broken.request('https://example.com',null,true),/invalid JSON/);
-console.log('PASS: four provider contracts, catalogue, RC4 vector, episodes, mirror failure isolation, captions, proxy errors, malformed JSON.');
+console.log('PASS: provider contracts, catalogue, RC4 vector, episodes, mirror failure isolation, captions, proxy errors, malformed JSON.');
 }
 main().catch(e=>{console.error(e);process.exitCode=1;});
 

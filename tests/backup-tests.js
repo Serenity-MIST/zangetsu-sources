@@ -1,7 +1,0 @@
-const fs=require('fs'),vm=require('vm'),assert=require('assert/strict'),path=require('path');
-function load(name,handler){let calls=[];let c={fetch:async(u,o={})=>{calls.push({u,o});return {status:200,body:await handler(u,o)}}};vm.createContext(c);vm.runInContext(fs.readFileSync(path.join(__dirname,'..','serenity-'+name+'.js'),'utf8'),c);c.calls=calls;return c;}
-(async()=>{
-let c=load('videasy',async(u,o)=>{if(u.includes('/seed?'))return '{"seed":"fresh"}';if(u.includes('/cdn/'))return 'encrypted-response';return JSON.stringify({status:200,result:{sources:[{url:'https://cdn.example/a.m3u8',quality:'1080p'}],subtitles:[{url:'https://cdn.example/en.vtt',language:'eng'}]}})});
-let ep={id:'tt1196946',tmdb:5920,type:'series',title:'The Mentalist',season:2,episode:3,year:2008};let s=await c.getVideoSources('https://v3-cinemeta.strem.io/meta/series/tt1196946.json#cine='+encodeURIComponent(JSON.stringify(ep)));assert.equal(s[0].subtitles[0].lang,'en');assert.equal(s[0].headers.Origin,undefined);assert.equal(s[0].headers.Referer,'https://www.cineby.at/');assert(c.calls[1].u.includes('title=The%2520Mentalist'));assert(c.calls[1].u.includes('seasonId=2'));assert(c.calls[1].u.includes('episodeId=3'));assert.equal(JSON.parse(c.calls[2].o.body).seed,'fresh');assert(!c.getSettings().some(x=>x.key==='streamServer'));
-console.log('PASS: backup source contracts, alias matching, episode ordering, direct video headers, Cineby session and series mapping.');
-})().catch(e=>{console.error(e);process.exitCode=1});
